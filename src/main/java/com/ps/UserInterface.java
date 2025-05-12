@@ -97,12 +97,12 @@ public class UserInterface {
         displayVehicles(filteredVehicles);
     }
     private void processGetByMakeModelRequest(){
-        System.out.print("Model: ");
+        System.out.print("Enter Model/Make: ");
         String model = scanner.nextLine().trim();
         ArrayList<Vehicle> matches = new ArrayList<>();
 
         for (Vehicle vehicle : dealership.getAllVehicles()) {
-            if (vehicle.getModel().equalsIgnoreCase(model)) {
+            if (vehicle.getMake().equalsIgnoreCase(model) || vehicle.getModel().equalsIgnoreCase(model)) {
                 matches.add(vehicle);
             }
         }
