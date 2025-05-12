@@ -1,5 +1,6 @@
 package com.ps;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -40,6 +41,7 @@ public class UserInterface {
 
             System.out.print("Command: ");
             mainMenuCommand = scanner.nextInt();
+            scanner.nextLine();
 
             switch(mainMenuCommand){
                 case 1:
@@ -95,7 +97,16 @@ public class UserInterface {
         displayVehicles(filteredVehicles);
     }
     private void processGetByMakeModelRequest(){
-        displayVehicles(dealership.getAllVehicles());
+        System.out.print("Model: ");
+        String model = scanner.nextLine().trim();
+        ArrayList<Vehicle> matches = new ArrayList<>();
+
+        for (Vehicle vehicle : dealership.getAllVehicles()) {
+            if (vehicle.getModel().equalsIgnoreCase(model)) {
+                matches.add(vehicle);
+            }
+        }
+        displayVehicles(matches);
     }
     private void processGetByYearRequest(){
         System.out.println("Min year: ");
@@ -111,9 +122,9 @@ public class UserInterface {
     }
     private void processGetByMileageRequest(){
         System.out.print("Min mileage: ");
-        int min = Integer.parseInt(scanner.nextLine());
+        int min = Integer.parseInt(scanner.nextLine().trim());
         System.out.print("Max mileage: ");
-        int max = Integer.parseInt(scanner.nextLine());
+        int max = Integer.parseInt(scanner.nextLine().trim());
         displayVehicles(dealership.getVehiclesByMileage(min, max));
     }
     private void processGetByVehicleTypeRequest(){
@@ -126,20 +137,33 @@ public class UserInterface {
         System.out.println("---------Printing all vehicles-----------");
         displayVehicles(vehicles);
     }
-    private void processAddVehicleRequest(){
-        System.out.print("VIN: "); int vin = Integer.parseInt(scanner.nextLine());
-        System.out.print("Year: "); int year = Integer.parseInt(scanner.nextLine());
-        System.out.print("Make: "); String make = scanner.nextLine();
-        System.out.print("Model: "); String model = scanner.nextLine();
-        System.out.print("Type: "); String type = scanner.nextLine();
-        System.out.print("Color: "); String color = scanner.nextLine();
-        System.out.print("Odometer: "); int odometer = Integer.parseInt(scanner.nextLine());
-        System.out.print("Price: "); double price = Double.parseDouble(scanner.nextLine());
+    private void processAddVehicleRequest() {
+        try {
+            System.out.print("VIN: ");
+            int vin = Integer.parseInt(scanner.nextLine());
+            System.out.print("Year: ");
+            int year = Integer.parseInt(scanner.nextLine());
+            System.out.print("Make: ");
+            String make = scanner.nextLine();
+            System.out.print("Model: ");
+            String model = scanner.nextLine();
+            System.out.print("Type: ");
+            String type = scanner.nextLine();
+            System.out.print("Color: ");
+            String color = scanner.nextLine();
+            System.out.print("Odometer: ");
+            int odometer = Integer.parseInt(scanner.nextLine());
+            System.out.print("Price: ");
+            double price = Double.parseDouble(scanner.nextLine());
 
-        Vehicle vehicle= new Vehicle(vin, year, make, model, type, color, odometer, price);
-        dealership.addVehicle(vehicle);
-        DealershipFileManager.saveDealership(dealership);
-        System.out.println("Vehicle added.");
+            Vehicle vehicle = new Vehicle(vin, year, make, model, type, color, odometer, price);
+            dealership.addVehicle(vehicle);
+            DealershipFileManager.saveDealership(dealership);
+            System.out.println("Vehicle added.");
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            System.out.println("invalid input");
+        }
     }
     private void processRemoveVehicleRequest(){
         System.out.print("Enter VIN to remove: ");
